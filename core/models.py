@@ -1,6 +1,9 @@
+import uuid
+from datetime import datetime
+
 import sqlalchemy as sa
 
-from core.db import Model
+from core.db import Model, Session
 
 
 class User(Model):
@@ -21,3 +24,19 @@ class User(Model):
         if self.last_name:
             return self.last_name
         return self.username
+
+
+class State(Model):
+    __tablename__ = 'states'
+
+    id = sa.Column(sa.Integer, primary_key=True)
+    telegram_id = sa.Column(sa.BigInteger, nullable=False)
+    state = sa.Column(sa.Text, nullable=False, index=True)
+    created_at = sa.Column(sa.DateTime, default=datetime.utcnow, nullable=False)
+
+
+def make_state(session: Session, telegram_id):
+    state_str = str(uuid.uuid4())
+    state = State(telegram_id=telegram_id, state=state_str)
+    session.add(state)
+    return state_str

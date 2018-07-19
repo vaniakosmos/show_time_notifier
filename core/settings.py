@@ -1,4 +1,5 @@
 import logging
+import logging.config
 from os.path import dirname
 
 import easy_env
@@ -22,8 +23,38 @@ TRAKT_CLIENT_SECRET = easy_env.get_str('TRAKT_CLIENT_SECRET')
 TRAKT_REDIRECT_URI = easy_env.get_str('TRAKT_REDIRECT_URI')
 
 # logging
-# todo: setup properly
-logging.basicConfig(level=10 if DEBUG else 20)
+logging.addLevelName(logging.DEBUG, '🐛 ')
+logging.addLevelName(logging.INFO, '📄️ ')
+logging.addLevelName(logging.WARNING, '⚠️ ')
+logging.addLevelName(logging.ERROR, '🚨 ')
+logging.config.dictConfig({
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(name)20s:%(lineno)-4d  ⏩  %(message)s'
+        },
+    },
+    'handlers': {
+        'console': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+        },
+    },
+    'loggers': {
+        'core': {
+            'handlers': ['console'],
+            'level': 'DEBUG' if DEBUG else 'INFO',
+            'propagate': False,
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'INFO' if DEBUG else 'WARNING',
+        'propagate': False,
+    },
+})
 
 # models
 load_models(BASE_DIR, logger)

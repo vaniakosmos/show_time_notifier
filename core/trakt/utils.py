@@ -1,6 +1,6 @@
 from urllib.parse import urlencode
 
-from settings import TRAKT_CLIENT_ID, TRAKT_CLIENT_SECRET, TRAKT_REDIRECT_URI
+from core.settings import TRAKT_CLIENT_ID, TRAKT_CLIENT_SECRET, TRAKT_REDIRECT_URI
 
 
 def turl(*args):
