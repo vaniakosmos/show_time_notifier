@@ -1,0 +1,7 @@
+alembic
+sqlalchemy
+flask
+python-telegram-bot
+celery
+easy-env
+requests
