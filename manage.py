@@ -9,9 +9,10 @@ every 1 hour post stuff from queue
 every week refresh tokens
 """
 import argparse
+import importlib
 
-from core.settings import TELEGRAM_BOT_TOKEN  # should be loaded first
 
+importlib.import_module('core.settings')
 
 if __name__ == '__main__':
     from core.app import start_app
@@ -23,6 +24,6 @@ if __name__ == '__main__':
     if args.command == 'app':
         start_app()
     elif args.command == 'bot':
-        start_bot(TELEGRAM_BOT_TOKEN)
+        start_bot()
     else:
         raise ValueError('Invalid command')
