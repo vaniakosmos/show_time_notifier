@@ -8,7 +8,7 @@ from core.db import Session, session_wrapper
 from core.models import State, User
 from core.settings import TELEGRAM_BOT_TOKEN
 from .models import TraktCred
-from .utils import params_for_token, turl
+from .utils import params_for_token, api_url
 
 
 @session_wrapper
@@ -41,7 +41,7 @@ def fetch_auth_code(code: str = None, state: str = None) -> Union[str, http.Resp
     if not telegram_id:
         return http.Response("wow, this is very bad state in ur url. don't do that again",
                              status_code=400)
-    url = turl('oauth/token')
+    url = api_url('oauth/token')
     res = requests.post(url, json=params_for_token(code=code))
     data = res.json()
     save_credentials(telegram_id, data)

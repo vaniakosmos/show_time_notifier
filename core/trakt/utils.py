@@ -3,12 +3,20 @@ from urllib.parse import urlencode
 from core.settings import TRAKT_CLIENT_ID, TRAKT_CLIENT_SECRET, TRAKT_REDIRECT_URI
 
 
-def turl(*args):
-    return 'https://api.trakt.tv/' + '/'.join(args)
+def build_url(*args):
+    return '/'.join(map(str, args))
+
+
+def api_url(*args):
+    return build_url('https://api.trakt.tv', *args)
+
+
+def site_url(*args):
+    return build_url('https://trakt.tv', *args)
 
 
 def build_auth_url(state):
-    return turl('oauth/authorize') + '?' + urlencode({
+    return api_url('oauth/authorize') + '?' + urlencode({
         'response_type': 'code',
         'client_id': TRAKT_CLIENT_ID,
         'redirect_uri': TRAKT_REDIRECT_URI,

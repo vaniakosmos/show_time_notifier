@@ -1,10 +1,12 @@
 import logging
 from typing import Tuple
 
+from sqlalchemy.orm import Session
 from telegram import Bot, Update, User as TeleUser
 
-from core.db import Session, session_wrapper
+from core.db import session_wrapper
 from core.models import User, make_state
+from .tasks import fetch_calendars, publish_user_calendar
 from .models import TraktCred
 from .utils import build_auth_url
 
@@ -50,6 +52,11 @@ def unsubscribe(bot: Bot, update: Update, session: Session):
         bot.send_message(teleuser.id, 'unsubscribed from trakt')
     else:
         bot.send_message(teleuser.id, "wasn't subscribed to trakt")
+
+
+@session_wrapper
+def fetch_today(bot: Bot, update: Update, session: Session):
+    fetch_calendars()
 
 
 def update_urls(bot: Bot, update: Update):

@@ -1,26 +1,32 @@
-import logging
 import logging.config
+import multiprocessing
 from os.path import dirname
 
 import easy_env
 from dotenv import find_dotenv, load_dotenv
 
-from core.utils import load_models
+from core.utils import load_modules
 
 
 load_dotenv(find_dotenv())
-logger = logging.getLogger(__name__)
 
 # env and consts
 BASE_DIR = dirname(dirname(__file__))
 DEBUG = easy_env.get_bool('DEBUG', False)
 DATABASE_URL = easy_env.get_str('DATABASE_URL', raise_error=True)
 
+# telegram
 TELEGRAM_BOT_TOKEN = easy_env.get_str('TELEGRAM_BOT_TOKEN')
 
+# trakt
 TRAKT_CLIENT_ID = easy_env.get_str('TRAKT_CLIENT_ID')
 TRAKT_CLIENT_SECRET = easy_env.get_str('TRAKT_CLIENT_SECRET')
 TRAKT_REDIRECT_URI = easy_env.get_str('TRAKT_REDIRECT_URI')
+
+# celery
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_WORKER_CONCURRENCY = easy_env.get_int('CELERY_WORKER_CONCURRENCY',
+                                             multiprocessing.cpu_count())
 
 # logging
 logging.addLevelName(logging.DEBUG, '🐛 ')
@@ -56,5 +62,4 @@ logging.config.dictConfig({
     },
 })
 
-# models
-load_models(BASE_DIR, logger)
+load_modules('models', BASE_DIR)
